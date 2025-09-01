@@ -16,6 +16,7 @@ jobs:
 
   terraformInstall:
     runs-on: self-hosted
+    needs: checkout_job
     steps:
     - name: Install Terraform
       uses: little-core-labs/install-terraform@v2.0.0
@@ -24,6 +25,7 @@ jobs:
 
   azLogin: 
     runs-on: self-hosted
+    needs: terraformInstall
     steps: 
     - name: Azure Login
       uses: Azure/login@v2.3.0
@@ -34,6 +36,7 @@ jobs:
 
   terraformInit:
     runs-on: self-hosted 
+    needs: azLogin
     steps:
     - name: Terraform Init
       id: init
@@ -41,6 +44,7 @@ jobs:
   
   terraformPlan:
     runs-on: self-hosted
+    needs: terraformInit
     steps:
     - name: Terraform Plan
       id: plan
@@ -49,6 +53,7 @@ jobs:
   
   terraformApply:
     runs-on: self-hosted
+    needs: terraformPlan
     steps:
     - name: Terraform Apply
       id: apply
