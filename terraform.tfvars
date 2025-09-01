@@ -1,2 +1,2 @@
-resource_group_name = "my-resource-group"
+resource_group_name = "githubaction"
 location = "East US"
