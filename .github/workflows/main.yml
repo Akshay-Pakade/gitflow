@@ -11,4 +11,51 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v5.0.0
+
+  terraformInstall:
+    runs-on: self-hosted
+    steps:
+    - name: Install Terraform
+      uses: little-core-labs/install-terraform@v2.0.0
+      with:
+        version: latest
+
+  azLogin: 
+    runs-on: self-hosted
+    steps: 
+    - name: Azure Login
+      uses: Azure/login@v2.3.0
+      with:
+        client-id: e71571b5-c4fb-4d9f-895e-2132f82510e3
+        tenant-id: a6c82882-76f1-4e7b-af65-456ff85858b4
+        subscription-id: 3be29ba2-b31c-4fbd-a7bb-c51bf50ef740
+
+  terraformInit:
+    runs-on: self-hosted 
+    steps:
+    - name: Terraform Init
+      id: init
+      run: terraform init -input=false
+  
+  terraformPlan:
+    runs-on: self-hosted
+    steps:
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan -no-color -input=false
+      continue-on-error: true
+  
+  terraformApply:
+    runs-on: self-hosted
+    steps:
+    - name: Terraform Apply
+      id: apply
+      run: terraform apply --auto-approve
+      continue-on-error: true
+  
+   
+            
+  
+    
+    
   
