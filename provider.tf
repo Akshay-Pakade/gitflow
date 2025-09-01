@@ -5,6 +5,12 @@ terraform {
       version = "~> 3.0"
     }
   }
+backend "terraform" {
+resource_group_name = "akshayWorkflow"
+storage_account_name = "akkistg"
+container_name = "akkicon"
+key = "terraform.tfstate"
+}
 }
 provider "azurerm" {
   features {}
