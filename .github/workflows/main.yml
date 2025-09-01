@@ -1,59 +1,109 @@
-name: "work Flow"
+name: "Terraform Workflow"
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+
 permissions:
   id-token: write
   contents: read
+
 env:
   ENV_NAME: test-env
 
-jobs: 
-  checkout_job:
+jobs:
+  terraform:
     runs-on: self-hosted
     steps:
-    - name: Checkout
-      uses: actions/checkout@v5.0.0
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+
+      - name: Install Terraform
+        uses: little-core-labs/install-terraform@v2.0.0
+        with:
+          version: latest
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: e71571b5-c4fb-4d9f-895e-2132f82510e3
+          tenant-id: a6c82882-76f1-4e7b-af65-456ff85858b4
+          subscription-id: 3be29ba2-b31c-4fbd-a7bb-c51bf50ef740
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Plan
+        run: terraform plan -no-color -input=false
+
+      - name: Terraform Apply
+        run: terraform apply --auto-approve
+
+
+
+
+
+
+
+
+
+
+
+# name: "work Flow"
+
+# on: workflow_dispatch
+# permissions:
+#   id-token: write
+#   contents: read
+# env:
+#   ENV_NAME: test-env
+
+# jobs: 
+#   checkout_job:
+#     runs-on: self-hosted
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v5.0.0
        
-    - name: Install Terraform
-      uses: little-core-labs/install-terraform@v2.0.0
-      with:
-        version: latest
+#     - name: Install Terraform
+#       uses: little-core-labs/install-terraform@v2.0.0
+#       with:
+#         version: latest
 
-  azLogin: 
-    runs-on: self-hosted
-    needs:  checkout_job
-    steps: 
-    - name: Azure Login
-      uses: Azure/login@v2.3.0
-      with:
-        client-id: e71571b5-c4fb-4d9f-895e-2132f82510e3
-        tenant-id: a6c82882-76f1-4e7b-af65-456ff85858b4
-        subscription-id: 3be29ba2-b31c-4fbd-a7bb-c51bf50ef740
+#   azLogin: 
+#     runs-on: self-hosted
+#     needs:  checkout_job
+#     steps: 
+#     - name: Azure Login
+#       uses: Azure/login@v2.3.0
+#       with:
+#         client-id: e71571b5-c4fb-4d9f-895e-2132f82510e3
+#         tenant-id: a6c82882-76f1-4e7b-af65-456ff85858b4
+#         subscription-id: 3be29ba2-b31c-4fbd-a7bb-c51bf50ef740
 
-  terraformInit:
-    runs-on: self-hosted 
-    needs: azLogin
-    steps:
-    - name: Terraform Init
-      id: init
-      run: terraform init -input=false
+#   terraformInit:
+#     runs-on: self-hosted 
+#     needs: azLogin
+#     steps:
+#     - name: Terraform Init
+#       id: init
+#       run: terraform init -input=false
   
-  terraformPlan:
-    runs-on: self-hosted
-    needs: terraformInit
-    steps:
-    - name: Terraform Plan
-      id: plan
-      run: terraform plan -no-color -input=false
-      continue-on-error: true
+#   terraformPlan:
+#     runs-on: self-hosted
+#     needs: terraformInit
+#     steps:
+#     - name: Terraform Plan
+#       id: plan
+#       run: terraform plan -no-color -input=false
+#       continue-on-error: true
   
-  terraformApply:
-    runs-on: self-hosted
-    needs: terraformPlan
-    steps:
-    - name: Terraform Apply
-      id: apply
-      run: terraform apply --auto-approve
+#   terraformApply:
+#     runs-on: self-hosted
+#     needs: terraformPlan
+#     steps:
+#     - name: Terraform Apply
+#       id: apply
+#       run: terraform apply --auto-approve
   
    
             
