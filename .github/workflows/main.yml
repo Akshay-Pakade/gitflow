@@ -1,7 +1,9 @@
 name: "work Flow"
 
 on: workflow_dispatch
-
+permissions:
+  id-token: write
+  contents: read
 env:
   ENV_NAME: test-env
 
